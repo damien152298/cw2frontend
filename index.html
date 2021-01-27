@@ -1,0 +1,172 @@
+<html>
+   <head>
+      <title>Course Work 1</title>
+      <script src="https://unpkg.com/vue"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <link rel="stylesheet" href="stylesheet.css">
+      <script src="products.js"></script>
+   </head>
+   <body>
+      <div class="bg" id="app">
+         <header>
+            <h1 v-text="sitename" id="Title"></h1>
+         </header>
+         <main>
+
+            <div id="slideContainer" class="product_holder"></div>
+            
+
+            <div v-if = 'showProduct' id="sorting">
+               <button  class="btn btn-primary":disabled="cartFilled" v-on:click = 'showCheckout' id="checkoutBtn">{{cartItemCount}} 
+                  <span class="fa fa-cart-plus"> </span> Checkout 
+                  </button>
+               <h3>Price</h3>
+               <button class="btn btn-primary" @click="sortLowest">&#x2191</button>
+               <button class="btn btn-primary" @click="sortHighest">&#x2193</button>
+               <br>
+               <h3>Subject</h3>
+               <button class="btn btn-primary" @click="sortSubjectAsc">&#x2191</button>
+               <button class="btn btn-primary" @click="sortSubjectDes">&#x2193</button>
+               <br>
+               <h3>Location</h3>
+               <button class="btn btn-primary" @click="sortLocatioAsc">&#x2191</button>
+               <button class="btn btn-primary" @click="sortLocationDes">&#x2193</button>
+               <br>
+               <h3>Spaces</h3>
+               <button class="btn btn-primary" @click="sortLowestSpace">&#x2191</button>
+               <button class="btn btn-primary" @click="sortHighestSpace">&#x2193</button>
+            </div>
+
+            <div v-if = 'showProduct'>
+              <!-- <div class="product_holder" v-for="product in products">
+                         <h2 v-text="product.title"></h2>
+                         <figure>
+                             <img id="imageSize" v-bind:src="product.image">
+                         </figure>
+                         <p v-html="product.description"></p>
+                         <p>Price: {{product.price}}</p>
+                         <p>Available stock: {{product.availableInventory}}</p>
+
+                         
+                         
+
+
+                    <button class="btn btn-primary" v-on:click='addToCart(product); addToCheckOutCart(product); product.slots -=1' v-if='canAddToCart(product)'>Add to cart</button>
+
+                    <button disabled="disabled" v-else>Add to cart</button>
+
+                    <span v-if='product.availableInventory === cartCount(product.id)'>All out!</span>
+                    <span v-else-if="product.availableInventory - cartCount(product.id) < 5">
+                        Only {{product.availableInventory - cartCount(product.id)}} left!
+                    </span>
+                    <span v-else>Buy now!</span>
+               </div>        -->
+
+            </div>
+            <div v-else = 'showCheckout'>
+               <h1>Checkout</h1>
+               <button class="btn btn-primary" v-on:click = 'showCheckout' id="checkoutBtn">{{cartItemCount}} 
+                  <span class="fa fa-cart-plus"> </span> Go back 
+                  </button>
+            <form id="checkoutForm">
+               <p>
+                  <strong>First Name: </strong>
+                  <input
+                  type="text"
+                  v-model="order.firstName"
+                  @keypress="isLetter($event)"
+                  >
+              </p>
+
+              <p>
+               <strong>Last Name: </strong>
+               <input
+                  type="text"
+                  v-model="order.lastName"
+                  @keypress="isLetter($event)"
+                  >
+             </p>
+
+              <p>
+               <strong>Phone Number: </strong>
+               <input type="number" input v-model="order.phoneNumber"/>
+             </p>
+            </form>
+            <div id="orderForm">
+              <h2>Order Information</h2>
+                <p>First Name:{{order.firstName}}</p>
+                <p>Last Name:{{order.lastName}}</p>
+                <p>Phone Number:{{order.phoneNumber}}
+                   <br>
+                  <button class="btn btn-primary" :disabled="formFilled"  v-on:click="submitForm">Place Order</button> 
+                </p>
+            </div>
+            <br>
+            <br>
+                <ul id="orderItems">
+                  <div v-for="(products, index) in checkOutCart" class="item_holder">
+                     <img id="imageSize" v-bind:src="products.image">
+                    Subject: {{ products.title }}
+                    <br>
+                    Location: {{ products.description }}
+                    <br>
+                    Price: {{ products.price }}
+                    <button class="btn btn-primary" v-on:click='removeCart(index)'>Remove Item</button>
+                    <div id="getTest"></div>
+                  </div>
+                </ul>
+            </div>
+         </main>
+      </div>
+      <script src="store.js"></script>
+      <script>
+         
+
+const getLessons = ()=>{
+   fetch("https://coursework2mdx.herokuapp.com/collection/lessonsinfo", {method : "get"}).then((response)=>{
+      return response.json();
+   }).then((data)=>{
+      var lessonsInfo = data;
+      console.log(lessonsInfo[0].title, lessonsInfo[0].price, lessonsInfo[0].description);
+      var str = '<ul>'
+      lessonsInfo.forEach(function(lessonsInfo) {
+         str += '<li> Subject: '+ lessonsInfo.title + ' ' + 'Price: €' + lessonsInfo.price + ' ' + 'Location: ' + lessonsInfo.description + ' ' + 'Slots: ' + lessonsInfo.slots +  ' ' + '<button class="btn btn-primary" :disabled="formFilled"  v-on:click="addToCart(product); addToCheckOutCart(product); lessonsInfo.slots -=1">Place Order</button>' + '<br>' + '<br>' +'</li>';
+
+      document.getElementById("slideContainer").innerHTML = str;
+}); 
+
+   });
+
+}
+const postOrder = ()=>{
+   fetch("https://coursework2mdx.herokuapp.com/collection/order%20information", {method : "post"}).then((response)=>{
+      return response.json();
+   }).then((data)=>{
+      console.log(data);
+
+   });
+
+}
+
+const putOrder = ()=>{
+   fetch("https://coursework2mdx.herokuapp.com/collection/order%20information", {method : "put"}).then((response)=>{
+      return response.json();
+   }).then((data)=>{
+      console.log(data);
+
+   });
+
+
+
+}
+
+
+
+getLessons()
+
+
+      </script>
+   </body>
+</html>
