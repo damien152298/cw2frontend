@@ -1,0 +1,75 @@
+.bg {
+    background-image: url(https://png.pngtree.com/thumb_back/fw800/back_our/20190623/ourmid/pngtree-education-and-training-minimalist-background-image_238933.jpg);
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: scroll;
+}
+
+#title{
+    text-align: center;
+    border-bottom: 2px solid lightgray;
+ 
+}
+
+.product_holder{
+    border: 10px double darkred;
+    height: fit-content;
+    width: fit-content;
+    float: left;
+    margin-left: 180px;
+    margin-bottom: 10px;
+    text-indent: 40px;
+}
+
+
+#text{
+    padding-left: 260px;
+}
+
+#addtocartBtn{
+    margin-left:40px;
+}
+
+#checkoutBtn{
+    margin-top: 20px;
+}
+
+#imageSize{
+    height: 140px;
+    width: 140px;
+    float: right;
+    margin-right: 10px;
+}
+
+#checkoutForm{
+    border: 10px double darkred;
+    background-color: gray;
+    opacity: 80%;
+    width: fit-content;
+}
+
+#sorting{
+    border: 10px double darkred;
+    width: 140px;
+    float: right;
+
+}
+
+#orderForm{
+    border: 10px double darkred;
+    background-color: gray;
+    opacity: 90%;
+    width: fit-content;
+}
+
+.item_holder{
+    border: 10px double darkred;
+    height: 160px;
+    width: 450px;
+    float: left;
+    margin-left: 180px;
+    margin-bottom: 10px;
+    text-indent: 40px;
+}
